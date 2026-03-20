@@ -1,0 +1,32 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "AEG / Electrolux",
+        "description": "Enter your AEG/Electrolux account credentials (the same ones you use in the AEG app)",
+        "data": {
+          "username": "Email",
+          "password": "Password",
+          "brand": "Brand",
+          "country_code": "Country code (e.g. RO, DE, FR)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reauthenticate AEG / Electrolux",
+        "description": "Authentication for account {username} failed. Please enter the correct password.",
+        "data": {
+          "password": "New password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to the Electrolux server",
+      "invalid_auth": "Authentication failed. Check your credentials.",
+      "unknown": "Unknown error"
+    },
+    "abort": {
+      "already_configured": "AEG account already configured",
+      "reauth_successful": "Reauthentication successful"
+    }
+  }
+}

@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Home Assistant
+*.log
+*.db
+*.db-shm
+*.db-wal
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Personal data and test files
+*.har
+test_*.py
+test_*.json
+captured_requests/
+.env
+*.bak
+
+# Secrets
+secrets.yaml
+*.pem
+*.key
+credentials.json
+
+# Release artifacts (should only exist in GitHub Releases)
+*.zip
+RELEASE_*.md
+GITHUB_PUSH_SUMMARY.md
+
+# Verbose documentation (keep only README.md, CHANGELOG.md, info.md if exists)
+AUTO_VERSIONING.md
+DEPENDABOT.md
+WORKFLOWS.md
+SETUP.md
+
+# IPA / reverse engineering artifacts
+*.ipa
+*_extracted/

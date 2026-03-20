@@ -1,0 +1,12 @@
+{
+  "domain": "aeg",
+  "name": "AEG (Electrolux OCP)",
+  "codeowners": ["@emanuelbesliu"],
+  "config_flow": true,
+  "documentation": "https://github.com/emanuelbesliu/homeassistant-aeg",
+  "integration_type": "hub",
+  "iot_class": "cloud_push",
+  "issue_tracker": "https://github.com/emanuelbesliu/homeassistant-aeg/issues",
+  "requirements": ["aiohttp>=3.9.3"],
+  "version": "0.1.0"
+}
