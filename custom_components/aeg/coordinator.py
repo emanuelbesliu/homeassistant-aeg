@@ -106,6 +106,19 @@ class AegDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             for appliance in appliances:
                 app_id = appliance.get("applianceId", "")
                 if app_id:
+                    # Extract applianceType from nested location into top level
+                    # API returns it at properties.reported.applianceInfo.applianceType
+                    if "applianceType" not in appliance:
+                        reported = (
+                            appliance
+                            .get("properties", {})
+                            .get("reported", {})
+                        )
+                        app_info = reported.get("applianceInfo", {})
+                        app_type = app_info.get("applianceType", "")
+                        if app_type:
+                            appliance["applianceType"] = app_type
+
                     data["appliances"][app_id] = appliance
 
             # Track appliance IDs for WebSocket

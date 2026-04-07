@@ -14,7 +14,7 @@ from typing import Any
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import CATEGORY_NAMES, DOMAIN
+from .const import CATEGORY_NAMES, CONF_BRAND, DOMAIN
 from .coordinator import AegDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -114,23 +114,21 @@ class AegBaseEntity(CoordinatorEntity[AegDataUpdateCoordinator]):
     def device_info(self) -> DeviceInfo:
         """Return device info for this appliance."""
         data = self.appliance_data or {}
-        info = data.get("applianceData", {})
-        model_name = info.get("modelName", "")
-        appliance_type = info.get("applianceName", "")
-        brand = info.get("brand", "AEG")
+        app_data = data.get("applianceData", {})
+        model_name = app_data.get("modelName", "")
+        appliance_name = app_data.get("applianceName", "")
+        brand = self.coordinator.config_entry.data.get(CONF_BRAND, "AEG")
 
-        # Try to get a human-readable type
         category = data.get("applianceType", "")
-        type_name = CATEGORY_NAMES.get(category, appliance_type)
+        type_name = CATEGORY_NAMES.get(category, category)
 
         return DeviceInfo(
             identifiers={(DOMAIN, self._appliance_id)},
-            name=info.get("applianceName")
+            name=appliance_name
             or type_name
             or f"{brand} Appliance",
             manufacturer=brand,
-            model=model_name or type_name,
-            serial_number=info.get("serialNumber"),
+            model=model_name or type_name or None,
             sw_version=self.get_nested_property(
                 "networkInterface", "swVersion"
             ),

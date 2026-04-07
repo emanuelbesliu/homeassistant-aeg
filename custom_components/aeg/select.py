@@ -87,17 +87,16 @@ async def async_setup_entry(
                 )
             )
 
-        # Oven program selection (OV)
-        if "programUID" in reported:
-            # Programs are discovered dynamically from capabilities.
-            # Use a known base set; actual options may vary per appliance.
+        # Program selection (all appliance types via userSelections.programUID)
+        user_selections = reported.get("userSelections", {})
+        if isinstance(user_selections, dict) and "programUID" in user_selections:
             entities.append(
                 AegDynamicSelectEntity(
                     coordinator,
                     app_id,
                     "programUID",
                     "Program",
-                    "mdi:chef-hat",
+                    "mdi:washing-machine",
                 )
             )
 
@@ -209,7 +208,7 @@ class AegDynamicSelectEntity(AegBaseEntity, SelectEntity):
                 return self._discovered_options
 
         # Fallback: just the current value
-        value = self.get_property(self._entity_key)
+        value = self.get_nested_property("userSelections", self._entity_key)
         if value:
             return [str(value).replace("_", " ").title()]
         return []
@@ -217,14 +216,13 @@ class AegDynamicSelectEntity(AegBaseEntity, SelectEntity):
     @property
     def current_option(self) -> str | None:
         """Return the currently selected option."""
-        value = self.get_property(self._entity_key)
+        value = self.get_nested_property("userSelections", self._entity_key)
         if value is None:
             return None
         return str(value).replace("_", " ").title()
 
     async def async_select_option(self, option: str) -> None:
         """Select an option."""
-        # Convert title case back to API format
         raw_value = option.upper().replace(" ", "_")
         await self.coordinator.api.execute_command(
             self._appliance_id,

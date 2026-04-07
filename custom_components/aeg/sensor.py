@@ -71,19 +71,26 @@ async def async_setup_entry(
                 )
             )
 
-        # Cycle sub-phase (washing machines, dryers)
-        if "cycleSubPhase" in reported:
+        # Cycle phase (washing machines, dryers, dishwashers)
+        if "cyclePhase" in reported:
             entities.append(
                 AegStateSensor(
-                    coordinator, app_id, "cycleSubPhase", "Cycle Phase"
+                    coordinator, app_id, "cyclePhase", "Cycle Phase"
                 )
             )
 
-        # Program UID
-        if "programUID" in reported:
+        # Program UID (nested under userSelections)
+        user_selections = reported.get("userSelections", {})
+        if isinstance(user_selections, dict) and "programUID" in user_selections:
             entities.append(
-                AegStateSensor(
-                    coordinator, app_id, "programUID", "Program"
+                AegNestedStateSensor(
+                    coordinator,
+                    app_id,
+                    "programUID",
+                    "Program",
+                    "userSelections",
+                    "programUID",
+                    icon="mdi:washing-machine",
                 )
             )
 
@@ -225,6 +232,67 @@ async def async_setup_entry(
             entities.append(
                 AegStateSensor(
                     coordinator, app_id, "remoteControl", "Remote Control"
+                )
+            )
+
+        # Total cycle counter
+        if "totalCycleCounter" in reported:
+            entities.append(
+                AegGenericSensor(
+                    coordinator,
+                    app_id,
+                    "totalCycleCounter",
+                    "Total Cycles",
+                    icon="mdi:counter",
+                    unit=None,
+                )
+            )
+
+        # Total working time
+        if "applianceTotalWorkingTime" in reported:
+            entities.append(
+                AegTimeSensor(
+                    coordinator,
+                    app_id,
+                    "applianceTotalWorkingTime",
+                    "Total Working Time",
+                )
+            )
+
+        # Appliance mode
+        if "applianceMode" in reported:
+            entities.append(
+                AegStateSensor(
+                    coordinator, app_id, "applianceMode", "Appliance Mode"
+                )
+            )
+
+        # Rinse aid level (DW)
+        if "rinseAidLevel" in reported:
+            entities.append(
+                AegGenericSensor(
+                    coordinator,
+                    app_id,
+                    "rinseAidLevel",
+                    "Rinse Aid Level",
+                    icon="mdi:shimmer",
+                    unit=None,
+                )
+            )
+
+        # Display light setting (DW)
+        if "displayLight" in reported:
+            entities.append(
+                AegStateSensor(
+                    coordinator, app_id, "displayLight", "Display Light"
+                )
+            )
+
+        # Display on floor (DW)
+        if "displayOnFloor" in reported:
+            entities.append(
+                AegStateSensor(
+                    coordinator, app_id, "displayOnFloor", "Display On Floor"
                 )
             )
 
